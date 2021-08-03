@@ -128,6 +128,13 @@ export const paramterValuesMapping = (node_array, edges_array) => {
     final.set(key, value);
   });
 
+  //Maximum Concession add to last
+  let max_conc = guard_map.entries().next();
+  if (max_conc.value[1][0] === "Maximum%20Concession") {
+    guard_map.delete(max_conc.value[0]);
+    guard_map.set(max_conc.value[0], max_conc.value[1]);
+  }
+
   //merge guard_map
   guard_map.forEach((value, key) => {
     let condition = value[0];
@@ -153,9 +160,9 @@ export const paramterValuesMapping = (node_array, edges_array) => {
       let split_value = value[0].split("= ");
       value[0] = split_value[1];
     } else if (value[0].includes("> ")) {
-      value[0] = value[0].replace("> ", "types selected more than ");
+      value[0] = "If " + value[0].replace("> ", "types selected more than ");
     } else if (value[0].includes("< ")) {
-      value[0] = value[0].replace("< ", "types selected less than ");
+      value[0] = "If " + value[0].replace("< ", "types selected less than ");
     }
     final.set(key, value);
   });
@@ -168,7 +175,7 @@ export const paramterValuesMapping = (node_array, edges_array) => {
     value[1] = value[1].replace(/%25/g, "%");
     let string = value[1];
 
-    if (string.includes("Select")) {
+    if (string.includes("Select") || string.includes("or")) {
       let split_string = string
         .split("Select ")
         .join("")
